@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 
-const { DBUSER, DBPW } = process.env;
-mongoose.connect(`mongodb://${DBUSER}:${DBPW}@localhost/allReviews`, { useNewUrlParser: true });
+const { DB_USER, DB_PW } = process.env;
+mongoose.connect(`mongodb://${DB_USER}:${DB_PW}@localhost/slurpandburp`, { useNewUrlParser: true });
 const db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
