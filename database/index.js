@@ -1,31 +1,66 @@
-// const mongoose = require('mongoose');
+const mongoose = require('mongoose');
+require('dotenv').config();
 
 
-// mongoose.connect('mongodb://localhost/test');
-// const db = mongoose.connection;
+const { DBUSER, DBPW } = process.env;
+mongoose.connect(`mongodb://${DBUSER}:${DBPW}@localhost/allReviews`, { useNewUrlParser: true });
+const db = mongoose.connection;
 
-// db.on('error', () => {
-//   console.log('mongoose connection error');
-// });
-// db.once('open', () => {
-//   console.log('mongoose connected successfully');
-// });
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', () => {
+  console.log('Connected to database');
+});
 
-// const itemSchema = mongoose.Schema({
-//   quantity: Number,
-//   description: String,
-// });
+const myReviewsSchema = mongoose.Schema({
+  username: String,
+  restaurant: String,
+  formality: ['Fast Food', 'Casual', 'Formal', 'Michelin'],
+  ratingAtmosphere: Number,
+  ratingPrice: Number,
+  ratingService: Number,
+  ratingFood: Number,
+});
+const MyReviews = mongoose.model('MyReviews', myReviewsSchema);
 
-// const Item = mongoose.model('Item', itemSchema);
+const getAllReviews = (req, res) => {
+  MyReviews
+    .find({})
+    .exec((err, data) => {
+      if (err) {
+        console.log('GET all ERROR: ', err);
+        res.status(400).send(err);
+        throw (err);
+      }
+      res.status(200).send(data);
+    });
+};
 
-// const selectAll = (callback) => {
-//   Item.find({}, (err, items) => {
-//     if (err) {
-//       callback(err, null);
-//     } else {
-//       callback(null, items);
-//     }
-//   });
-// };
+const getRestaurantReview = (req, res) => {
+  MyReviews
+    .find({ restaurant: req.body.restaurant })
+    .exec((err, data) => {
+      if (err) {
+        console.log('GET restuarant ERROR: ', err);
+        res.status(400).send(err);
+        throw (err);
+      }
+      res.status(200).send(data);
+    });
+};
 
-// module.exports.selectAll = selectAll;
+const postMyReview = (req, res) => {
+  MyReviews
+    .create(req.body)
+    .exec((err) => {
+      if (err) {
+        console.log('POST review ERROR: ', err);
+        res.status(500).send(err);
+        throw (err);
+      }
+      res.status(201).send('POST successful');
+    });
+};
+
+module.exports = {
+  db, getAllReviews, getRestaurantReview, postMyReview,
+};
