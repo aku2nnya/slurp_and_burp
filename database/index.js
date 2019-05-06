@@ -15,50 +15,35 @@ const myReviewsSchema = mongoose.Schema({
   username: String,
   restaurant: String,
   formality: ['Fast Food', 'Casual', 'Formal', 'Michelin'],
-  ratingAtmosphere: Number,
-  ratingPrice: Number,
-  ratingService: Number,
-  ratingFood: Number,
+  ratingAtmosphere: ['1', '2', '3', '4', '5'],
+  ratingPrice: ['1', '2', '3', '4', '5'],
+  ratingService: ['1', '2', '3', '4', '5'],
+  ratingFood: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+  comment: String,
 });
-const MyReviews = mongoose.model('MyReviews', myReviewsSchema);
+const MyReviews = mongoose.model('allreviews', myReviewsSchema);
 
 const getAllReviews = (req, res) => {
   MyReviews
-    .find({})
-    .exec((err, data) => {
-      if (err) {
-        console.log('GET all ERROR: ', err);
-        res.status(400).send(err);
-        throw (err);
-      }
-      res.status(200).send(data);
-    });
+    .find({}, null, { sort: { restaurant: 1 } })
+    .then(response => res.status(200).send(response))
+    .then(() => console.log('GET all successful'))
+    .catch(err => res.status(400).send('GET all ERROR: ', err));
 };
 
 const getRestaurantReview = (req, res) => {
   MyReviews
     .find({ restaurant: req.body.restaurant })
-    .exec((err, data) => {
-      if (err) {
-        console.log('GET restuarant ERROR: ', err);
-        res.status(400).send(err);
-        throw (err);
-      }
-      res.status(200).send(data);
-    });
+    .then(response => res.status(200).send(response))
+    .then(() => console.log('GET restaurant successful'))
+    .catch(err => res.status(400).send('GET restaurant ERROR: ', err));
 };
 
 const postMyReview = (req, res) => {
   MyReviews
     .create(req.body)
-    .exec((err) => {
-      if (err) {
-        console.log('POST review ERROR: ', err);
-        res.status(500).send(err);
-        throw (err);
-      }
-      res.status(201).send('POST successful');
-    });
+    .then(() => res.status(201).send('POST successful'))
+    .catch(err => res.status(500).send('POST review ERROR: ', err));
 };
 
 module.exports = {
