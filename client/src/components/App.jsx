@@ -11,6 +11,7 @@ class App extends React.Component {
     this.state = {
       allReviews: [],
       restaurantReview: {},
+      reviewScoreDisplay: false,
     };
     this.getAllReviews = this.getAllReviews.bind(this);
     this.handleRestaurantClick = this.handleRestaurantClick.bind(this);
@@ -31,7 +32,7 @@ class App extends React.Component {
   }
 
   handleRestaurantClick(e) {
-    const { allReviews } = this.state;
+    const { allReviews, reviewScoreDisplay } = this.state;
     for (let i = 0; i < allReviews.length; i += 1) {
       if (e.target.value === allReviews[i].restaurant) {
         this.setState({
@@ -39,15 +40,21 @@ class App extends React.Component {
         });
       }
     }
+    this.setState({
+      reviewScoreDisplay: !reviewScoreDisplay,
+    });
   }
 
   render() {
-    const { allReviews, restaurantReview } = this.state;
+    const { allReviews, restaurantReview, reviewScoreDisplay } = this.state;
     return (
       <>
         <h1>Slurp & Burp</h1>
         <AllReviews allReviews={allReviews} handleRestaurantClick={this.handleRestaurantClick} />
-        <RestaurantReview restaurantReview={restaurantReview} />
+        <RestaurantReview
+          restaurantReview={restaurantReview}
+          reviewScoreDisplay={reviewScoreDisplay}
+        />
         <Form getAllReviews={this.getAllReviews} />
       </>
     );
