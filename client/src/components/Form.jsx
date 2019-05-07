@@ -1,11 +1,15 @@
 import React from 'react';
 import axios from 'axios';
+import SearchResults from './SearchResults';
+
 
 class Form extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       username: 'Toshi',
+      restaurantName: '',
+      restaurantLocation: '',
       restaurant: '',
       formality: '',
       ratingAtmosphere: '',
@@ -13,16 +17,35 @@ class Form extends React.Component {
       ratingService: '',
       ratingFood: '',
       comment: '',
+      searchResults: [],
     };
+    this.getYelpRestaurants = this.getYelpRestaurants.bind(this);
     this.postReview = this.postReview.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
     this.handleInput = this.handleInput.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleRestaurantClick = this.handleRestaurantClick.bind(this);
+  }
+
+  getYelpRestaurants() {
+    const { restaurantName, restaurantLocation } = this.state;
+    const restaurantInfo = { restaurantName, restaurantLocation };
+    axios.post('/yelpRestaurants', restaurantInfo)
+      .then(res => this.setState({ searchResults: res.data }))
+      .catch(err => console.log('POST ERROR: ', err));
   }
 
   postReview() {
     axios.post('/allReviews', this.state)
       .then(res => console.log(res))
       .catch(err => console.log('POST ERROR: ', err));
+  }
+
+  handleSearch() {
+    const { restaurantName, restaurantLocation } = this.state;
+    if (restaurantName && restaurantLocation) {
+      this.getYelpRestaurants();
+    }
   }
 
   handleInput(e) {
@@ -35,7 +58,8 @@ class Form extends React.Component {
   handleSubmit() {
     const { getAllReviews } = this.props;
     const {
-      username, restaurant, formality, ratingAtmosphere, ratingPrice, ratingService, ratingFood
+      username, restaurant, formality, ratingAtmosphere,
+      ratingPrice, ratingService, ratingFood,
     } = this.state;
     if (username && restaurant && formality && ratingAtmosphere
       && ratingPrice && ratingService && ratingFood) {
@@ -44,66 +68,85 @@ class Form extends React.Component {
     }
   }
 
+  handleRestaurantClick(e) {
+    this.setState({
+      restaurant: e.target.value,
+    });
+  }
+
   render() {
+    const { searchResults, restaurant } = this.state;
     return (
-      <form>
-        <div>Restaurant</div>
-        <input name="restaurant" placeholder="Enter Restaurant Name" onChange={this.handleInput} required />
-        <div>Formality</div>
-        <select name="formality" onChange={this.handleInput} required>
-          <option defaultValue="" />
-          <option>Fast Food</option>
-          <option>Casual</option>
-          <option>Fine Dining</option>
-          <option>Michelin</option>
-        </select>
-        <div>Ratings</div>
-        <div>Atmosphere</div>
-        <select name="ratingAtmosphere" onChange={this.handleInput} required>
-          <option defaultValue="" />
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
-          <option>5</option>
-        </select>
-        <div>Price</div>
-        <select name="ratingPrice" onChange={this.handleInput} required>
-          <option defaultValue="" />
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
-          <option>5</option>
-        </select>
-        <div>Service</div>
-        <select name="ratingService" onChange={this.handleInput} required>
-          <option defaultValue="" />
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
-          <option>5</option>
-        </select>
-        <div>Food</div>
-        <select name="ratingFood" onChange={this.handleInput}>
-          <option defaultValue="" />
-          <option value="1">1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
-          <option>5</option>
-          <option>6</option>
-          <option>7</option>
-          <option>8</option>
-          <option>9</option>
-          <option>10</option>
-        </select>
-        <div>Comments</div>
-        <input name="comment" placeholder="Any comments?" onChange={this.handleInput} />
-        <br />
-        <button type="submit" onClick={this.handleSubmit}>Submit</button>
-      </form>
+      <>
+        <form>
+          <h2>Search Restaurant</h2>
+          <input name="restaurantName" placeholder="Restaurant Name" onChange={this.handleInput} required />
+          <input name="restaurantLocation" placeholder="Restaurant City" onChange={this.handleInput} required />
+          <button type="button" onClick={this.handleSearch}>Search</button>
+        </form>
+        <SearchResults
+          searchResults={searchResults}
+          handleRestaurantClick={this.handleRestaurantClick}
+        />
+        <form>
+          <h2>Restaurant</h2>
+          <div>{restaurant}</div>
+          <h3>Formality:</h3>
+          <select name="formality" onChange={this.handleInput} required>
+            <option defaultValue="" />
+            <option>Fast Food</option>
+            <option>Casual</option>
+            <option>Fine Dining</option>
+            <option>Michelin</option>
+          </select>
+          <h3>Ratings:</h3>
+          <span>Atmosphere: </span>
+          <select name="ratingAtmosphere" onChange={this.handleInput} required>
+            <option defaultValue="" />
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+          </select>
+          <span> Price: </span>
+          <select name="ratingPrice" onChange={this.handleInput} required>
+            <option defaultValue="" />
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+          </select>
+          <span> Service: </span>
+          <select name="ratingService" onChange={this.handleInput} required>
+            <option defaultValue="" />
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+          </select>
+          <span> Food: </span>
+          <select name="ratingFood" onChange={this.handleInput}>
+            <option defaultValue="" />
+            <option value="1">1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+            <option>8</option>
+            <option>9</option>
+            <option>10</option>
+          </select>
+          <h4>Comments:</h4>
+          <textarea name="comment" placeholder="Any comments?" onChange={this.handleInput} />
+          <br />
+          <button type="submit" onClick={this.handleSubmit}>Submit</button>
+        </form>
+      </>
     );
   }
 }

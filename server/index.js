@@ -5,6 +5,8 @@ const path = require('path');
 const morgan = require('morgan');
 require('dotenv').config();
 const { getAllReviews, postMyReview } = require('../database/index');
+const { getYelpRestaurants } = require('./yelpAPI');
+
 
 const app = express();
 const { PORT } = process.env;
@@ -16,6 +18,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../public')));
 
 app.get('/allReviews', getAllReviews);
+app.post('/yelpRestaurants', getYelpRestaurants);
 app.post('/allReviews', postMyReview);
 
 app.listen(PORT, () => {
