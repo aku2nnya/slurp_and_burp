@@ -18,6 +18,7 @@ class Form extends React.Component {
       ratingFood: '',
       comment: '',
       searchResults: [],
+      formDisplay: false,
     };
     this.getYelpRestaurants = this.getYelpRestaurants.bind(this);
     this.postReview = this.postReview.bind(this);
@@ -69,13 +70,16 @@ class Form extends React.Component {
   }
 
   handleRestaurantClick(e) {
+    const { formDisplay } = this.state;
     this.setState({
       restaurant: e.target.value,
+      formDisplay: !formDisplay,
     });
   }
 
   render() {
-    const { searchResults, restaurant } = this.state;
+    const { searchResults, restaurant, formDisplay } = this.state;
+    const toggleDisplay = formDisplay ? 'show' : 'hide';
     return (
       <>
         <form>
@@ -88,9 +92,9 @@ class Form extends React.Component {
           searchResults={searchResults}
           handleRestaurantClick={this.handleRestaurantClick}
         />
-        <form>
+        <form className={toggleDisplay}>
           <h2>Restaurant</h2>
-          <div>{restaurant}</div>
+          <div required>{restaurant}</div>
           <h3>Formality:</h3>
           <select name="formality" onChange={this.handleInput} required>
             <option defaultValue="" />

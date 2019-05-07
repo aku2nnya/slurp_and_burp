@@ -4,3 +4,11 @@
   box-sizing: border-box;
   display: flex;
 }
+
+.hide {
+  display: none;
+}
+
+.show {
+  display: block;
+}
