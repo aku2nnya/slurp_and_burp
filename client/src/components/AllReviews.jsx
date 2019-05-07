@@ -1,11 +1,11 @@
 import React from 'react';
 
+
 const AllReviews = (props) => {
-  const { allReviews } = props;
-  console.log(allReviews);
+  const { allReviews, handleRestaurantClick } = props;
   return (
     <div>
-      {allReviews.map(review => <button type="button" key={review._id}>{review.restaurant}</button>)}
+      {allReviews.map(review => <button type="button" value={review.restaurant} onClick={handleRestaurantClick} key={review._id}>{review.restaurant}</button>)}
     </div>
   );
 };
