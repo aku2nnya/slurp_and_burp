@@ -32,17 +32,19 @@ class App extends React.Component {
   }
 
   handleRestaurantClick(e) {
-    const { allReviews, reviewScoreDisplay } = this.state;
+    const { allReviews, restaurantReview, reviewScoreDisplay } = this.state;
     for (let i = 0; i < allReviews.length; i += 1) {
-      if (e.target.value === allReviews[i].restaurant) {
+      if (e.target.value === restaurantReview.restaurant) {
+        this.setState({
+          reviewScoreDisplay: !reviewScoreDisplay,
+        });
+      } else if (e.target.value === allReviews[i].restaurant) {
         this.setState({
           restaurantReview: allReviews[i],
+          reviewScoreDisplay: true,
         });
       }
     }
-    this.setState({
-      reviewScoreDisplay: !reviewScoreDisplay,
-    });
   }
 
   render() {
