@@ -11,8 +11,8 @@ const SearchResults = (props) => {
           </div>
           <img src={restaurant.image_url} alt="Restaurant" height="100px" width="100px" />
           <div>
-            <a href={restaurant.url}>
-              <span>Go To Yelp Page</span>
+            <a href={restaurant.url} target="_blank" rel="noopener noreferrer">
+              <span>yelp</span>
             </a>
           </div>
         </span>

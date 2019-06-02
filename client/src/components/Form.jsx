@@ -32,14 +32,14 @@ class Form extends React.Component {
     const { restaurantName, restaurantLocation } = this.state;
     const restaurantInfo = { restaurantName, restaurantLocation };
     axios.post('/yelpRestaurants', restaurantInfo)
-      .then(res => this.setState({ searchResults: res.data }))
-      .catch(err => console.log('POST ERROR: ', err));
+      .then(response => this.setState({ searchResults: response.data }))
+      .catch((error) => { throw (error); });
   }
 
   postReview() {
     axios.post('/allReviews', this.state)
-      .then(res => console.log(res))
-      .catch(err => console.log('POST ERROR: ', err));
+      .then(response => console.log(response))
+      .catch((error) => { throw (error); });
   }
 
   handleSearch() {
