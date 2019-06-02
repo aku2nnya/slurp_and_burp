@@ -27,7 +27,6 @@ const getAllReviews = (req, res) => {
   MyReviews
     .find({}, null, { sort: { restaurant: 1 } })
     .then(response => res.status(200).send(response))
-    .then(() => console.log('GET all successful'))
     .catch(err => res.status(400).send('GET all ERROR: ', err));
 };
 
@@ -35,7 +34,6 @@ const getRestaurantReview = (req, res) => {
   MyReviews
     .find({ restaurant: req.body.restaurant })
     .then(response => res.status(200).send(response))
-    .then(() => console.log('GET restaurant successful'))
     .catch(err => res.status(400).send('GET restaurant ERROR: ', err));
 };
 
