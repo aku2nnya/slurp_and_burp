@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/aku2nnya/slurp_and_burp#readme",
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "dotenv": "^8.0.0",
